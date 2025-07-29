@@ -2,38 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Word Scramble Game</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>Word Scramble Game</h1>
-  </header>
-  <main class="container" role="main">
+  <div class="container">
+    <h2>Word Scramble Game</h2>
     <div class="content">
-      <section class="instructions">
-        <h2>How to Play</h2>
-        <p>Unscramble the word displayed using the hint provided. Enter your guess in the input field and click "Check Word" or press Enter. Click "Refresh Word" for a new word. Earn points for each correct answer within the time limit!</p>
-      </section>
       <p class="word"></p>
       <div class="details">
         <p class="hint">Hint: <span></span></p>
         <p class="time">Time Left: <span><b>30</b>s</span></p>
         <p class="score">Score: <span><b>0</b></span></p>
       </div>
-      <form class="game-form">
-        <input type="text" id="guess-input" spellcheck="false" placeholder="Enter a valid word" aria-label="Enter your guess for the scrambled word" required>
-        <p class="message" aria-live="polite"></p>
+      <div class="status"></div>
+      <div class="inputs">
+        <input type="text" placeholder="Enter your guess" spellcheck="false">
         <div class="buttons">
-          <button type="button" class="refresh-word">Refresh Word</button>
-          <button type="submit" class="check-word">Check Word</button>
+          <button class="refresh">Refresh Word</button>
+          <button class="check">Check Word</button>
         </div>
-      </form>
+      </div>
+      <button class="start">Start Game</button>
     </div>
-  </main>
-  <footer role="contentinfo">
-    <button type="button" class="reset-game">Reset Game</button>
-    <p>Created by xAI</p>
-  </footer>
+  </div>
+  <footer>Created by Mridul Khanal</footer>
+  <script src="script.js"></script>
 </body>
 </html>
