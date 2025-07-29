@@ -64,11 +64,16 @@ function scrambleWord(word) {
 
 function startTimer() {
   clearInterval(timer);
-  time = 30;
+  time = 60;
   timeText.textContent = time;
   timer = setInterval(() => {
     time--;
     timeText.textContent = time;
+    if (time <= 10) {
+      timeText.parentElement.classList.add("low-time");
+    } else {
+      timeText.parentElement.classList.remove("low-time");
+    }
     if (time <= 0) {
       clearInterval(timer);
       statusText.textContent = `Game Over! Your score: ${score}`;
@@ -81,6 +86,7 @@ function startTimer() {
 
 function checkWord() {
   const userWord = inputField.value.toLowerCase();
+  statusText.classList.remove("correct", "incorrect"); // Clear previous classes
   if (!userWord) {
     statusText.textContent = "Please enter a word!";
     return;
@@ -89,9 +95,11 @@ function checkWord() {
     score += 10;
     scoreText.textContent = score;
     statusText.textContent = `Congrats! ${correctWord.toUpperCase()} is correct!`;
+    statusText.classList.add("correct");
     setTimeout(pickNewWord, 1000);
   } else {
     statusText.textContent = `Oops! ${userWord} is not correct. Try again!`;
+    statusText.classList.add("incorrect");
     inputField.value = "";
   }
 }
