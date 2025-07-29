@@ -34,7 +34,7 @@ const checkBtn = document.querySelector(".check");
 const startBtn = document.querySelector(".start");
 const statusText = document.querySelector(".status");
 
-let currentWord, correctWord, scrambledWord, score = 0, time = 30, timer;
+let currentWord, correctWord, scrambledWord, score = 0, time = 60, timer;
 
 function initGame() {
   startBtn.style.display = "none";
