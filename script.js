@@ -33,16 +33,26 @@ const refreshBtn = document.querySelector(".refresh");
 const checkBtn = document.querySelector(".check");
 const startBtn = document.querySelector(".start");
 const statusText = document.querySelector(".status");
+const progressBar = document.querySelector(".progress");
+const canvas = document.getElementById("particle-canvas");
+const ctx = canvas.getContext("2d");
 
 let currentWord, correctWord, scrambledWord, score = 0, time = 60, timer;
+let particles = [];
 
 function initGame() {
   startBtn.style.display = "none";
   document.querySelector(".inputs").style.display = "flex";
   score = 0;
   scoreText.textContent = score;
+  initCanvas();
   pickNewWord();
   startTimer();
+}
+
+function initCanvas() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
 }
 
 function pickNewWord() {
@@ -54,8 +64,11 @@ function pickNewWord() {
   hintText.textContent = currentWord.hint;
   timeText.textContent = time;
   statusText.textContent = "";
+  statusText.classList.remove("correct", "incorrect");
   inputField.value = "";
   inputField.setAttribute("maxlength", correctWord.length);
+  particles = []; // Clear particles
+  canvas.classList.remove("active");
 }
 
 function scrambleWord(word) {
@@ -66,13 +79,17 @@ function startTimer() {
   clearInterval(timer);
   time = 60;
   timeText.textContent = time;
+  progressBar.style.width = "100%";
   timer = setInterval(() => {
     time--;
     timeText.textContent = time;
+    progressBar.style.width = `${(time / 60) * 100}%`;
     if (time <= 10) {
       timeText.parentElement.classList.add("low-time");
+      progressBar.classList.add("low-time");
     } else {
       timeText.parentElement.classList.remove("low-time");
+      progressBar.classList.remove("low-time");
     }
     if (time <= 0) {
       clearInterval(timer);
@@ -80,13 +97,52 @@ function startTimer() {
       document.querySelector(".inputs").style.display = "none";
       startBtn.style.display = "block";
       startBtn.textContent = "Play Again";
+      particles = [];
+      canvas.classList.remove("active");
     }
   }, 1000);
 }
 
+function createParticles() {
+  particles = [];
+  const particleCount = 50;
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: Math.random() * 3 + 1,
+      color: `hsl(${Math.random() * 60 + 90}, 70%, 50%)`, // Yellow-green hues
+      speed: Math.random() * 5 + 2,
+      angle: Math.random() * Math.PI * 2,
+      life: 100
+    });
+  }
+  canvas.classList.add("active");
+}
+
+function updateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += Math.cos(p.angle) * p.speed;
+    p.y += Math.sin(p.angle) * p.speed;
+    p.life -= 2;
+    p.radius *= 0.98;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+  });
+  if (particles.length > 0) {
+    requestAnimationFrame(updateParticles);
+  } else {
+    canvas.classList.remove("active");
+  }
+}
+
 function checkWord() {
   const userWord = inputField.value.toLowerCase();
-  statusText.classList.remove("correct", "incorrect"); // Clear previous classes
+  statusText.classList.remove("correct", "incorrect");
   if (!userWord) {
     statusText.textContent = "Please enter a word!";
     return;
@@ -96,6 +152,8 @@ function checkWord() {
     scoreText.textContent = score;
     statusText.textContent = `Congrats! ${correctWord.toUpperCase()} is correct!`;
     statusText.classList.add("correct");
+    createParticles();
+    requestAnimationFrame(updateParticles);
     setTimeout(pickNewWord, 1000);
   } else {
     statusText.textContent = `Oops! ${userWord} is not correct. Try again!`;
@@ -110,3 +168,5 @@ checkBtn.addEventListener("click", checkWord);
 inputField.addEventListener("keypress", (e) => {
   if (e.key === "Enter") checkWord();
 });
+
+window.addEventListener("resize", initCanvas);
