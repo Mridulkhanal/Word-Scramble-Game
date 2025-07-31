@@ -58,18 +58,30 @@ const scoreText = document.querySelector(".score b");
 const inputField = document.querySelector(".inputs input");
 const refreshBtn = document.querySelector(".refresh");
 const checkBtn = document.querySelector(".check");
+const hintBtn = document.querySelector(".hint-btn");
 const startBtn = document.querySelector(".start");
 const statusText = document.querySelector(".status");
 const progressBar = document.querySelector(".progress");
 const canvas = document.getElementById("particle-canvas");
 const ctx = canvas.getContext("2d");
+const modeSelect = document.querySelector(".mode");
+const modeDisplay = document.querySelector(".mode-display");
 
-let currentWord, correctWord, scrambledWord, score = 0, time = 60, timer;
-let particles = [];
+let currentWord, correctWord, scrambledWord, score = 0, time, timer, mode = "normal", hintUsed = false;
+
+function getTimeLimit() {
+  return mode === "normal" ? 60 : 30;
+}
+
+function getPointsPerWord() {
+  return mode === "normal" ? 10 : 15;
+}
 
 function initGame() {
   startBtn.style.display = "none";
   document.querySelector(".inputs").style.display = "flex";
+  document.querySelector(".mode-selection").style.display = "none";
+  modeDisplay.textContent = `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
   score = 0;
   scoreText.textContent = score;
   initCanvas();
@@ -94,6 +106,8 @@ function pickNewWord() {
   statusText.classList.remove("correct", "incorrect");
   inputField.value = "";
   inputField.setAttribute("maxlength", correctWord.length);
+  hintBtn.disabled = false;
+  hintUsed = false;
   particles = [];
   canvas.classList.remove("active");
 }
@@ -104,13 +118,13 @@ function scrambleWord(word) {
 
 function startTimer() {
   clearInterval(timer);
-  time = 60;
+  time = getTimeLimit();
   timeText.textContent = time;
   progressBar.style.width = "100%";
   timer = setInterval(() => {
     time--;
     timeText.textContent = time;
-    progressBar.style.width = `${(time / 60) * 100}%`;
+    progressBar.style.width = `${(time / getTimeLimit()) * 100}%`;
     if (time <= 10) {
       timeText.parentElement.classList.add("low-time");
       progressBar.classList.add("low-time");
@@ -122,12 +136,32 @@ function startTimer() {
       clearInterval(timer);
       statusText.textContent = `Game Over! Your score: ${score}`;
       document.querySelector(".inputs").style.display = "none";
+      document.querySelector(".mode-selection").style.display = "block";
       startBtn.style.display = "block";
       startBtn.textContent = "Play Again";
       particles = [];
       canvas.classList.remove("active");
     }
   }, 1000);
+}
+
+function getHint() {
+  if (hintUsed || score < 5) {
+    statusText.textContent = score < 5 ? "Not enough points for a hint!" : "Hint already used for this word!";
+    statusText.classList.add("incorrect");
+    return;
+  }
+  score = Math.max(0, score - 5);
+  scoreText.textContent = score;
+  hintUsed = true;
+  hintBtn.disabled = true;
+  const correctLetter = correctWord[0].toUpperCase();
+  const currentDisplay = wordText.textContent.split("");
+  const correctIndex = currentWord.word.toUpperCase().split("").indexOf(correctLetter);
+  currentDisplay[scrambledWord.toUpperCase().split("").indexOf(correctLetter)] = correctLetter;
+  wordText.textContent = currentDisplay.join("");
+  statusText.textContent = `Hint: First letter is '${correctLetter}'`;
+  statusText.classList.add("correct");
 }
 
 function createParticles() {
@@ -175,7 +209,7 @@ function checkWord() {
     return;
   }
   if (userWord === correctWord) {
-    score += 10;
+    score += getPointsPerWord();
     scoreText.textContent = score;
     statusText.textContent = `Congrats! ${correctWord.toUpperCase()} is correct!`;
     statusText.classList.add("correct");
@@ -189,9 +223,15 @@ function checkWord() {
   }
 }
 
+modeSelect.addEventListener("change", () => {
+  mode = modeSelect.value;
+  modeDisplay.textContent = `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+});
+
 startBtn.addEventListener("click", initGame);
 refreshBtn.addEventListener("click", pickNewWord);
 checkBtn.addEventListener("click", checkWord);
+hintBtn.addEventListener("click", getHint);
 inputField.addEventListener("keypress", (e) => {
   if (e.key === "Enter") checkWord();
 });
