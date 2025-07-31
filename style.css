@@ -159,6 +159,11 @@ body {
   animation: shake 0.3s ease-in-out;
 }
 
+.status.bonus {
+  color: #ffd700;
+  animation: fadeIn 0.3s ease-in;
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
@@ -216,6 +221,7 @@ button {
 .hint-btn {
   background: linear-gradient(45deg, #ffc107, #e0a800);
   color: #fff;
+  min-width: 140px;
 }
 
 .hint-btn:disabled {
@@ -291,5 +297,8 @@ footer {
   button, .inputs input, .mode-selection select {
     font-size: 14px;
     padding: 10px;
+  }
+  .hint-btn {
+    min-width: 120px;
   }
 }
