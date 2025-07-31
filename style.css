@@ -40,6 +40,35 @@ body {
   position: relative;
 }
 
+.mode-selection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.mode-selection p {
+  font-size: 16px;
+  color: #bbb;
+}
+
+.mode-selection select {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #2a2a4a;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.mode-display {
+  font-size: 16px;
+  color: #bbb;
+  margin-bottom: 15px;
+}
+
 .word {
   user-select: none;
   font-size: 36px;
@@ -157,6 +186,8 @@ body {
 .buttons {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 button {
@@ -173,12 +204,26 @@ button {
   color: #fff;
 }
 
-.refresh:hover, .check:hover {
+.hint-btn {
+  background: linear-gradient(45deg, #ffc107, #e0a800);
+  color: #fff;
+}
+
+.hint-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.refresh:hover, .check:hover, .hint-btn:hover:not(:disabled) {
   background: linear-gradient(45deg, #2a4ad0, #5372f0);
   transform: translateY(-2px);
 }
 
-.refresh:active, .check:active {
+.hint-btn:hover:not(:disabled) {
+  background: linear-gradient(45deg, #e0a800, #ffc107);
+}
+
+.refresh:active, .check:active, .hint-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
@@ -234,7 +279,7 @@ footer {
   .details p {
     font-size: 16px;
   }
-  button, .inputs input {
+  button, .inputs input, .mode-selection select {
     font-size: 14px;
     padding: 10px;
   }
