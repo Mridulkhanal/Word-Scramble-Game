@@ -169,7 +169,13 @@ function pickNewWord() {
   currentWord = words[randIndex];
   correctWord = currentWord.word.toLowerCase();
   scrambledWord = scrambleWord(correctWord);
-  wordText.textContent = scrambledWord.toUpperCase();
+  wordText.innerHTML = scrambledWord.toUpperCase().split("").map(letter => `<span>${letter}</span>`).join("");
+  const spans = wordText.querySelectorAll("span");
+  spans.forEach((span, index) => {
+    setTimeout(() => {
+      span.classList.add("reveal");
+    }, index * 100);
+  });
   hintText.textContent = currentWord.hint;
   timeText.textContent = time;
   statusText.textContent = "";
@@ -234,11 +240,11 @@ function getHint() {
   if (hintCount >= 2) hintBtn.disabled = true;
   const hintIndex = hintCount - 1;
   const correctLetter = correctWord[hintIndex].toUpperCase();
-  const currentDisplay = wordText.textContent.split("");
+  const currentDisplay = wordText.querySelectorAll("span");
   const correctLetterIndex = currentWord.word.toUpperCase().split("").indexOf(correctLetter, hintIndex);
-  const scrambledLetterIndex = scrambledWord.toUpperCase().split("").indexOf(correctLetter, hintIndex === 0 ? 0 : currentDisplay.indexOf(correctWord[0].toUpperCase()));
-  currentDisplay[scrambledLetterIndex] = correctLetter;
-  wordText.textContent = currentDisplay.join("");
+  const scrambledLetterIndex = scrambledWord.toUpperCase().split("").indexOf(correctLetter, hintIndex === 0 ? 0 : Array.from(currentDisplay).findIndex(span => span.textContent === correctWord[0].toUpperCase()));
+  currentDisplay[scrambledLetterIndex].textContent = correctLetter;
+  currentDisplay[scrambledLetterIndex].classList.add("reveal");
   statusText.textContent = `Hint: Letter ${hintCount} is '${correctLetter}'`;
   statusText.classList.add("correct");
 }
