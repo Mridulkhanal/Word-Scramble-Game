@@ -1,5 +1,5 @@
 const words = [
-  { worduzioni: "The process of adding numbers" },
+  { word: "addition", hint: "The process of adding numbers" },
   { word: "meeting", hint: "Event in which people come together" },
   { word: "number", hint: "Math symbol used for counting" },
   { word: "exchange", hint: "The act of trading" },
@@ -68,9 +68,10 @@ const ctx = canvas.getContext("2d");
 const modeSelect = document.querySelector(".mode");
 const modeDisplay = document.querySelector(".mode-display");
 
-let currentWord, correctWord, scrambledWord, score = 0, time, timer, mode = "normal", hintUsed = false;
+let currentWord, correctWord, scrambledWord, score = 0, time, timer, mode = "normal", hintCount = 0;
 let highScoreNormal = parseInt(localStorage.getItem("highScoreNormal")) || 0;
 let highScoreChallenge = parseInt(localStorage.getItem("highScoreChallenge")) || 0;
+let wordStartTime;
 
 function getTimeLimit() {
   return mode === "normal" ? 60 : 30;
@@ -128,11 +129,13 @@ function pickNewWord() {
   hintText.textContent = currentWord.hint;
   timeText.textContent = time;
   statusText.textContent = "";
-  statusText.classList.remove("correct", "incorrect");
+  statusText.classList.remove("correct", "incorrect", "bonus");
   inputField.value = "";
   inputField.setAttribute("maxlength", correctWord.length);
   hintBtn.disabled = false;
-  hintUsed = false;
+  hintBtn.textContent = "Get Hint (-5 points)";
+  hintCount = 0;
+  wordStartTime = Date.now();
   particles = [];
   canvas.classList.remove("active");
 }
@@ -172,22 +175,26 @@ function startTimer() {
 }
 
 function getHint() {
-  if (hintUsed || score < 5) {
-    statusText.textContent = score < 5 ? "Not enough points for a hint!" : "Hint already used for this word!";
+  const hintCost = hintCount === 0 ? 5 : 10;
+  if (hintCount >= 2 || score < hintCost) {
+    statusText.textContent = score < hintCost ? `Not enough points for a hint (${hintCost} needed)!` : "No more hints available!";
     statusText.classList.add("incorrect");
     return;
   }
-  score = Math.max(0, score - 5);
+  score = Math.max(0, score - hintCost);
   scoreText.textContent = score;
   updateHighScore();
-  hintUsed = true;
-  hintBtn.disabled = true;
-  const correctLetter = correctWord[0].toUpperCase();
+  hintCount++;
+  hintBtn.textContent = hintCount === 1 ? "Get Hint (-10 points)" : "Get Hint (-10 points)";
+  if (hintCount >= 2) hintBtn.disabled = true;
+  const hintIndex = hintCount - 1;
+  const correctLetter = correctWord[hintIndex].toUpperCase();
   const currentDisplay = wordText.textContent.split("");
-  const correctIndex = currentWord.word.toUpperCase().split("").indexOf(correctLetter);
-  currentDisplay[scrambledWord.toUpperCase().split("").indexOf(correctLetter)] = correctLetter;
+  const correctLetterIndex = currentWord.word.toUpperCase().split("").indexOf(correctLetter, hintIndex);
+  const scrambledLetterIndex = scrambledWord.toUpperCase().split("").indexOf(correctLetter, hintIndex === 0 ? 0 : currentDisplay.indexOf(correctWord[0].toUpperCase()));
+  currentDisplay[scrambledLetterIndex] = correctLetter;
   wordText.textContent = currentDisplay.join("");
-  statusText.textContent = `Hint: First letter is '${correctLetter}'`;
+  statusText.textContent = `Hint: Letter ${hintCount} is '${correctLetter}'`;
   statusText.classList.add("correct");
 }
 
@@ -230,17 +237,27 @@ function updateParticles() {
 
 function checkWord() {
   const userWord = inputField.value.toLowerCase();
-  statusText.classList.remove("correct", "incorrect");
+  statusText.classList.remove("correct", "incorrect", "bonus");
   if (!userWord) {
     statusText.textContent = "Please enter a word!";
     return;
   }
   if (userWord === correctWord) {
-    score += getPointsPerWord();
+    let points = getPointsPerWord();
+    const timeTaken = (Date.now() - wordStartTime) / 1000;
+    let bonus = 0;
+    if (timeTaken <= 5) {
+      bonus = 5;
+      points += bonus;
+      statusText.textContent = `Congrats! ${correctWord.toUpperCase()} is correct! +${bonus} time bonus!`;
+      statusText.classList.add("bonus");
+    } else {
+      statusText.textContent = `Congrats! ${correctWord.toUpperCase()} is correct!`;
+      statusText.classList.add("correct");
+    }
+    score += points;
     scoreText.textContent = score;
     updateHighScore();
-    statusText.textContent = `Congrats! ${correctWord.toUpperCase()} is correct!`;
-    statusText.classList.add("correct");
     createParticles();
     requestAnimationFrame(updateParticles);
     setTimeout(pickNewWord, 1000);
