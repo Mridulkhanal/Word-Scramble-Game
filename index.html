@@ -12,6 +12,8 @@
     <h2>Word Scramble Game</h2>
     <div class="content">
       <div class="mode-selection">
+        <p>Player Name:</p>
+        <input type="text" class="player-name" placeholder="Enter your name" spellcheck="false">
         <p>Select Mode:</p>
         <select class="mode">
           <option value="normal" selected>Normal (60s)</option>
@@ -19,6 +21,26 @@
         </select>
       </div>
       <p class="mode-display">Mode: Normal</p>
+      <div class="leaderboard">
+        <div class="leaderboard-header">
+          <p>Leaderboard</p>
+          <select class="leaderboard-mode">
+            <option value="normal" selected>Normal</option>
+            <option value="challenge">Challenge</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody class="leaderboard-scores"></tbody>
+        </table>
+      </div>
       <p class="word"></p>
       <div class="details">
         <p class="hint">Hint: <span></span></p>
