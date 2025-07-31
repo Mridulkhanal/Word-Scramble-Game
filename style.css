@@ -42,7 +42,7 @@ body {
 
 .mode-selection {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 15px;
 }
@@ -52,7 +52,51 @@ body {
   color: #bbb;
 }
 
+.mode-selection input, .mode-selection select {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #2a2a4a;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.mode-selection input {
+  width: 100%;
+}
+
+.mode-selection input::placeholder {
+  color: #888;
+}
+
 .mode-selection select {
+  cursor: pointer;
+}
+
+.mode-display {
+  font-size: 16px;
+  color: #bbb;
+  margin-bottom: 15px;
+}
+
+.leaderboard {
+  margin-bottom: 20px;
+}
+
+.leaderboard-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.leaderboard-header p {
+  font-size: 16px;
+  color: #bbb;
+}
+
+.leaderboard-mode {
   padding: 8px;
   border: none;
   border-radius: 8px;
@@ -63,10 +107,28 @@ body {
   outline: none;
 }
 
-.mode-display {
-  font-size: 16px;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #2a2a4a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
   color: #bbb;
-  margin-bottom: 15px;
+}
+
+th {
+  background: linear-gradient(45deg, #5372f0, #2a4ad0);
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background: #1e1e3a;
 }
 
 .word {
@@ -294,11 +356,15 @@ footer {
   .details p {
     font-size: 16px;
   }
-  button, .inputs input, .mode-selection select {
+  button, .inputs input, .mode-selection select, .mode-selection input, .leaderboard-mode {
     font-size: 14px;
     padding: 10px;
   }
   .hint-btn {
     min-width: 120px;
+  }
+  th, td {
+    font-size: 12px;
+    padding: 8px;
   }
 }
