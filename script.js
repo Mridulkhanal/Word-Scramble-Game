@@ -48,7 +48,57 @@ const words = [
   { word: "breeze", hint: "A gentle wind" },
   { word: "shadow", hint: "Dark area caused by blocked light" },
   { word: "valley", hint: "Low area between hills" },
-  { word: "secret", hint: "Something kept hidden" }
+  { word: "secret", hint: "Something kept hidden" },
+  { word: "animal", hint: "A living creature that moves" },
+  { word: "bottle", hint: "Container for holding liquids" },
+  { word: "camera", hint: "Device for capturing images" },
+  { word: "desert", hint: "Arid land with little water" },
+  { word: "engine", hint: "Machine that powers vehicles" },
+  { word: "family", hint: "Group of related individuals" },
+  { word: "guitar", hint: "Stringed musical instrument" },
+  { word: "hammer", hint: "Tool for driving nails" },
+  { word: "island", hint: "Land surrounded by water" },
+  { word: "jacket", hint: "Outer garment for warmth" },
+  { word: "kitchen", hint: "Room for preparing food" },
+  { word: "ladder", hint: "Tool for climbing heights" },
+  { word: "magnet", hint: "Object that attracts metal" },
+  { word: "nature", hint: "The world of plants and animals" },
+  { word: "orange", hint: "Citrus fruit or a color" },
+  { word: "pencil", hint: "Tool for writing or drawing" },
+  { word: "rocket", hint: "Vehicle for space travel" },
+  { word: "silver", hint: "Shiny metal or a color" },
+  { word: "ticket", hint: "Pass for entry or travel" },
+  { word: "umbrella", hint: "Device for rain protection" },
+  { word: "village", hint: "Small community in rural area" },
+  { word: "wallet", hint: "Holder for money and cards" },
+  { word: "yogurt", hint: "Creamy dairy food" },
+  { word: "anchor", hint: "Device to secure a ship" },
+  { word: "button", hint: "Small fastener for clothes" },
+  { word: "castle", hint: "Fortified building from history" },
+  { word: "dragon", hint: "Mythical fire-breathing creature" },
+  { word: "eagle", hint: "Large bird of prey" },
+  { word: "fossil", hint: "Preserved remains of ancient life" },
+  { word: "glacier", hint: "Large mass of moving ice" },
+  { word: "hobby", hint: "Activity done for enjoyment" },
+  { word: "insect", hint: "Small creature with six legs" },
+  { word: "jungle", hint: "Dense tropical forest" },
+  { word: "kettle", hint: "Container for boiling water" },
+  { word: "lantern", hint: "Portable light source" },
+  { word: "moment", hint: "A brief period of time" },
+  { word: "nest", hint: "Bird's home for eggs" },
+  { word: "onion", hint: "Vegetable that makes you cry" },
+  { word: "piano", hint: "Keyboard musical instrument" },
+  { word: "quilt", hint: "Warm bed covering" },
+  { word: "radio", hint: "Device for receiving broadcasts" },
+  { word: "saddle", hint: "Seat for riding a horse" },
+  { word: "tiger", hint: "Large striped feline" },
+  { word: "vase", hint: "Container for holding flowers" },
+  { word: "wheel", hint: "Circular object for movement" },
+  { word: "xray", hint: "Image to see inside the body" },
+  { word: "yacht", hint: "Luxury boat for sailing" },
+  { word: "zebra", hint: "Animal with black and white stripes" },
+  { word: "arrow", hint: "Pointed projectile for a bow" },
+  { word: "bench", hint: "Long seat for multiple people" }
 ];
 
 const wordText = document.querySelector(".word");
@@ -94,7 +144,7 @@ function updateLeaderboard() {
     const name = playerName.trim() || "Player";
     leaderboard.push({ score, date, name });
     leaderboard.sort((a, b) => b.score - a.score);
-    leaderboard.splice(5); // Keep top 5
+    leaderboard.splice(3); // Keep top 3
     if (mode === "normal") {
       leaderboardNormal = leaderboard;
       localStorage.setItem("leaderboardNormal", JSON.stringify(leaderboardNormal));
