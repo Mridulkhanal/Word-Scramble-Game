@@ -1,5 +1,5 @@
 const words = [
-  { word: "addition", hint: "The process of adding numbers" },
+  { worduzioni: "The process of adding numbers" },
   { word: "meeting", hint: "Event in which people come together" },
   { word: "number", hint: "Math symbol used for counting" },
   { word: "exchange", hint: "The act of trading" },
@@ -55,6 +55,7 @@ const wordText = document.querySelector(".word");
 const hintText = document.querySelector(".hint span");
 const timeText = document.querySelector(".time b");
 const scoreText = document.querySelector(".score b");
+const highScoreText = document.querySelector(".high-score b");
 const inputField = document.querySelector(".inputs input");
 const refreshBtn = document.querySelector(".refresh");
 const checkBtn = document.querySelector(".check");
@@ -68,6 +69,8 @@ const modeSelect = document.querySelector(".mode");
 const modeDisplay = document.querySelector(".mode-display");
 
 let currentWord, correctWord, scrambledWord, score = 0, time, timer, mode = "normal", hintUsed = false;
+let highScoreNormal = parseInt(localStorage.getItem("highScoreNormal")) || 0;
+let highScoreChallenge = parseInt(localStorage.getItem("highScoreChallenge")) || 0;
 
 function getTimeLimit() {
   return mode === "normal" ? 60 : 30;
@@ -77,6 +80,26 @@ function getPointsPerWord() {
   return mode === "normal" ? 10 : 15;
 }
 
+function updateHighScore() {
+  const highScore = mode === "normal" ? highScoreNormal : highScoreChallenge;
+  if (score > highScore) {
+    if (mode === "normal") {
+      highScoreNormal = score;
+      localStorage.setItem("highScoreNormal", highScoreNormal);
+    } else {
+      highScoreChallenge = score;
+      localStorage.setItem("highScoreChallenge", highScoreChallenge);
+    }
+    highScoreText.textContent = score;
+    highScoreText.parentElement.classList.add("new-high");
+    statusText.textContent = `New High Score! ${score} points!`;
+    statusText.classList.add("correct");
+    setTimeout(() => {
+      highScoreText.parentElement.classList.remove("new-high");
+    }, 1000);
+  }
+}
+
 function initGame() {
   startBtn.style.display = "none";
   document.querySelector(".inputs").style.display = "flex";
@@ -84,6 +107,8 @@ function initGame() {
   modeDisplay.textContent = `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
   score = 0;
   scoreText.textContent = score;
+  highScoreText.textContent = mode === "normal" ? highScoreNormal : highScoreChallenge;
+  highScoreText.parentElement.classList.remove("new-high");
   initCanvas();
   pickNewWord();
   startTimer();
@@ -134,6 +159,7 @@ function startTimer() {
     }
     if (time <= 0) {
       clearInterval(timer);
+      updateHighScore();
       statusText.textContent = `Game Over! Your score: ${score}`;
       document.querySelector(".inputs").style.display = "none";
       document.querySelector(".mode-selection").style.display = "block";
@@ -153,6 +179,7 @@ function getHint() {
   }
   score = Math.max(0, score - 5);
   scoreText.textContent = score;
+  updateHighScore();
   hintUsed = true;
   hintBtn.disabled = true;
   const correctLetter = correctWord[0].toUpperCase();
@@ -211,6 +238,7 @@ function checkWord() {
   if (userWord === correctWord) {
     score += getPointsPerWord();
     scoreText.textContent = score;
+    updateHighScore();
     statusText.textContent = `Congrats! ${correctWord.toUpperCase()} is correct!`;
     statusText.classList.add("correct");
     createParticles();
@@ -226,6 +254,7 @@ function checkWord() {
 modeSelect.addEventListener("change", () => {
   mode = modeSelect.value;
   modeDisplay.textContent = `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+  highScoreText.textContent = mode === "normal" ? highScoreNormal : highScoreChallenge;
 });
 
 startBtn.addEventListener("click", initGame);
