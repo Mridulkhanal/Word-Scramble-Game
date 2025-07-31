@@ -30,7 +30,9 @@ Fully responsive design for mobile and desktop
 
 # 📸 Screenshots
 
- ![Uploading scramble game.png…]()
+<img width="1313" height="887" alt="scramble game" src="https://github.com/user-attachments/assets/bf9cc465-e954-444f-a0c7-088c00099973" />
+
+ 
 
 
 # 🚀 Technologies Used
