@@ -1,3 +1,4 @@
+// Mridul Khanal
 // Copyright (c) 2025 Mridul Khanal
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 const words = [
