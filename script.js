@@ -21,7 +21,34 @@ const words = [
   { word: "expert", hint: "Person with extensive knowledge" },
   { word: "statement", hint: "A declaration of something" },
   { word: "second", hint: "One-sixtieth of a minute" },
-  { word: "library", hint: "Place containing collection of books" }
+  { word: "library", hint: "Place containing collection of books" },
+  { word: "river", hint: "A large flowing body of water" },
+  { word: "dream", hint: "A series of thoughts during sleep" },
+  { word: "cloud", hint: "A visible mass of water droplets" },
+  { word: "music", hint: "Art of sound in time" },
+  { word: "bridge", hint: "Structure over a river or road" },
+  { word: "forest", hint: "Large area covered with trees" },
+  { word: "school", hint: "Place for education and learning" },
+  { word: "window", hint: "Opening in a wall for light" },
+  { word: "travel", hint: "To journey from one place to another" },
+  { word: "market", hint: "Place where goods are bought and sold" },
+  { word: "puzzle", hint: "Game requiring problem-solving" },
+  { word: "chair", hint: "A seat for one person" },
+  { word: "dance", hint: "Moving rhythmically to music" },
+  { word: "planet", hint: "A celestial body orbiting a star" },
+  { word: "smile", hint: "A facial expression of happiness" },
+  { word: "street", hint: "Public thoroughfare in a city" },
+  { word: "mirror", hint: "Surface that reflects images" },
+  { word: "candle", hint: "Wax stick with a wick for light" },
+  { word: "clock", hint: "Device for measuring time" },
+  { word: "flower", hint: "Blooming part of a plant" },
+  { word: "table", hint: "Furniture with a flat top" },
+  { word: "laugh", hint: "Sound of amusement or joy" },
+  { word: "ocean", hint: "Vast body of saltwater" },
+  { word: "breeze", hint: "A gentle wind" },
+  { word: "shadow", hint: "Dark area caused by blocked light" },
+  { word: "valley", hint: "Low area between hills" },
+  { word: "secret", hint: "Something kept hidden" }
 ];
 
 const wordText = document.querySelector(".word");
@@ -67,7 +94,7 @@ function pickNewWord() {
   statusText.classList.remove("correct", "incorrect");
   inputField.value = "";
   inputField.setAttribute("maxlength", correctWord.length);
-  particles = []; // Clear particles
+  particles = [];
   canvas.classList.remove("active");
 }
 
@@ -111,7 +138,7 @@ function createParticles() {
       x: canvas.width / 2,
       y: canvas.height / 2,
       radius: Math.random() * 3 + 1,
-      color: `hsl(${Math.random() * 60 + 90}, 70%, 50%)`, // Yellow-green hues
+      color: `hsl(${Math.random() * 60 + 90}, 70%, 50%)`,
       speed: Math.random() * 5 + 2,
       angle: Math.random() * Math.PI * 2,
       life: 100
