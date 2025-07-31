@@ -67,10 +67,16 @@ const canvas = document.getElementById("particle-canvas");
 const ctx = canvas.getContext("2d");
 const modeSelect = document.querySelector(".mode");
 const modeDisplay = document.querySelector(".mode-display");
+const leaderboardMode = document.querySelector(".leaderboard-mode");
+const leaderboardScores = document.querySelector(".leaderboard-scores");
+const playerNameInput = document.querySelector(".player-name");
 
 let currentWord, correctWord, scrambledWord, score = 0, time, timer, mode = "normal", hintCount = 0;
 let highScoreNormal = parseInt(localStorage.getItem("highScoreNormal")) || 0;
 let highScoreChallenge = parseInt(localStorage.getItem("highScoreChallenge")) || 0;
+let leaderboardNormal = JSON.parse(localStorage.getItem("leaderboardNormal")) || [];
+let leaderboardChallenge = JSON.parse(localStorage.getItem("leaderboardChallenge")) || [];
+let playerName = localStorage.getItem("playerName") || "";
 let wordStartTime;
 
 function getTimeLimit() {
@@ -79,6 +85,40 @@ function getTimeLimit() {
 
 function getPointsPerWord() {
   return mode === "normal" ? 10 : 15;
+}
+
+function updateLeaderboard() {
+  const leaderboard = mode === "normal" ? leaderboardNormal : leaderboardChallenge;
+  if (score > 0) {
+    const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const name = playerName.trim() || "Player";
+    leaderboard.push({ score, date, name });
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard.splice(5); // Keep top 5
+    if (mode === "normal") {
+      leaderboardNormal = leaderboard;
+      localStorage.setItem("leaderboardNormal", JSON.stringify(leaderboardNormal));
+    } else {
+      leaderboardChallenge = leaderboard;
+      localStorage.setItem("leaderboardChallenge", JSON.stringify(leaderboardChallenge));
+    }
+  }
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  const leaderboard = leaderboardMode.value === "normal" ? leaderboardNormal : leaderboardChallenge;
+  leaderboardScores.innerHTML = "";
+  leaderboard.forEach((entry, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${entry.name}</td>
+      <td>${entry.score}</td>
+      <td>${entry.date}</td>
+    `;
+    leaderboardScores.appendChild(row);
+  });
 }
 
 function updateHighScore() {
@@ -99,9 +139,12 @@ function updateHighScore() {
       highScoreText.parentElement.classList.remove("new-high");
     }, 1000);
   }
+  updateLeaderboard();
 }
 
 function initGame() {
+  playerName = playerNameInput.value.trim() || "Player";
+  localStorage.setItem("playerName", playerName);
   startBtn.style.display = "none";
   document.querySelector(".inputs").style.display = "flex";
   document.querySelector(".mode-selection").style.display = "none";
@@ -111,6 +154,7 @@ function initGame() {
   highScoreText.textContent = mode === "normal" ? highScoreNormal : highScoreChallenge;
   highScoreText.parentElement.classList.remove("new-high");
   initCanvas();
+  renderLeaderboard();
   pickNewWord();
   startTimer();
 }
@@ -168,6 +212,7 @@ function startTimer() {
       document.querySelector(".mode-selection").style.display = "block";
       startBtn.style.display = "block";
       startBtn.textContent = "Play Again";
+      playerNameInput.value = playerName;
       particles = [];
       canvas.classList.remove("active");
     }
@@ -272,7 +317,10 @@ modeSelect.addEventListener("change", () => {
   mode = modeSelect.value;
   modeDisplay.textContent = `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
   highScoreText.textContent = mode === "normal" ? highScoreNormal : highScoreChallenge;
+  renderLeaderboard();
 });
+
+leaderboardMode.addEventListener("change", renderLeaderboard);
 
 startBtn.addEventListener("click", initGame);
 refreshBtn.addEventListener("click", pickNewWord);
@@ -283,3 +331,5 @@ inputField.addEventListener("keypress", (e) => {
 });
 
 window.addEventListener("resize", initCanvas);
+playerNameInput.value = playerName;
+renderLeaderboard();
