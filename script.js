@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mridul Khanal
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
 const words = [
   { word: "addition", hint: "The process of adding numbers" },
   { word: "meeting", hint: "Event in which people come together" },
