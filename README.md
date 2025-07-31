@@ -25,8 +25,11 @@ Fully responsive design for mobile and desktop
 # 🚀 Technologies Used
 
 HTML5: Semantic structure for game UI
+
 CSS3: Flexbox, gradients, animations, and media queries
+
 JavaScript (Vanilla): Game logic, DOM manipulation, canvas animations
+
 Google Fonts: Poppins for clean typography
 localStorage: Persistent storage for scores and player names
 Vercel: Deployment platform (optional, replace with your hosting)
