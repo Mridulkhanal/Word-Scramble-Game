@@ -22,7 +22,7 @@ Canvas-based particle effects for correct answers
 
 Responsive progress bar and hint system (max 2 hints/word)
 
-Time bonus (+5 points for solving in <5s)
+Time bonus 
 
 High score tracking with animation
 
@@ -62,7 +62,7 @@ Open index.html in a modern browser (Chrome, Firefox, Edge).
 
 
 # Play:
-Enter a player name (optional, defaults to "Player").
+Enter a player name .
 
 Select Normal or Challenge mode.
 
@@ -114,3 +114,4 @@ Inspiration: Classic word puzzles with modern web enhancements
 
 # 📜 License
 MIT License - Free to use, modify, and distribute.
+
